@@ -1,0 +1,32 @@
+.showpref_bg{
+    background: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0,0,0,0)),url("./imgs/vote9.jpg");
+    background-position: center;
+}
+.showusers_bg{
+    background: linear-gradient(rgba(0, 0, 0, 0.1),rgba(0,0,0,0)),url("./imgs/vote7.jpg");
+}
+.form_css{
+    width:50rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border-radius: 1rem;
+}
+.lead_title{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    
+}
+.course_lead_title{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+}
+.post_lead_title{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: bold;
+}
+.prefect_lead_title{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: rgb(31, 31, 31);
+}
