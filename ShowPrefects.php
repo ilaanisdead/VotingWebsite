@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="show.css">
 </head>
 <body class="showpref_bg ">
+<?php 
+    session_start();
+
+    if(isset($_SESSION["Uid"])){
+?>
 <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -22,10 +27,28 @@
                     <a class="nav-link" href="ShowUsers.php">ShowStudents</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">CurrentStandings</a>
+                    <a class="nav-link" href="Standings.php">CurrentStandings</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="Prefect.php">AddPrefect</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="AddAdmin.php">AddAdmin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowAdmins.php">ShowAdmins</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="AddPost.php">AddPost</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowPosts.php">ShowPosts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="AddCourse.php">AddCourse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowCourses.php">ShowCourses</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="return confirm('Are you sure you want to Logout');" href="Logout.php">Logout</a>
@@ -164,5 +187,8 @@
         }
     ?>
     </div>
+    <?php 
+    } 
+    ?>
 </body>
 </html>

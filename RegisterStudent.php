@@ -16,7 +16,9 @@ include("connection.php");
 </head>
 <body class="bg py-4">
 
-    <h1 class="text-center lead_title">Enter Student Details: </h1>
+    <a class="nav-link d-inline-block bg-primary ms-5 text-white px-5 rounded py-1" href="index.php">Login</a>
+
+    <h3 class="text-center lead_title">Enter Student Details: </h3>
 
     <form class="container-fluid py-4 form_css" action="RegisterStudent.php" method="post">
         <p>
@@ -68,65 +70,125 @@ include("connection.php");
 
         <button type="submit" class="btn btn-primary" name="register">Register</button>
         
-        <a class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover d-inline-block ms-5" href="index.php">Back</a>
     </form>
 </body>
 </html>
 
 <?php 
     
+    // if(isset($_POST["register"])) {
+    //     $email = $_POST["email"];
+    //     if(preg_match("[@students.cavendish.ac.ug]",$email)){
+
+    //         $fn = $_POST["fname"];
+    //         $ln = $_POST["lname"];
+    //         $course = $_POST["course"];
+    //         $email = $_POST["email"];
+    //         $pass = $_POST["pass"];
+    //         // $Pass1 = md5($pass);
+    //         // $Pass2 = sha1($Pass1);
+    //         // $Pass3 = md5($Pass2);
+    //         // $Pass4 = sha1($Pass3);
+    //         // $Pass5 = crypt($Pass4,'@%!');
+    //         $pass1 = md5($pass);
+    //         $pass2 = sha1($pass1);
+    //         $pass3 = md5($pass2);
+    //         $pass4 = sha1($pass3);
+    //         $pass5= crypt($pass4,"@%1`");
+      
+           
+
+    //         $phone = $_POST["phone"];
+    //         $address = $_POST["address"];
+
+    //         $servername = "localhost";
+    //         $username = "root";
+    //         $password = "";
+    //         $db = "voting_db";
+
+    //         try {
+    //             $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
+    //             // set the PDO error mode to exception
+    //             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //             // echo "Connected successfully";
+    //             // Step 3 : Writhe the SQL Command
+
+    //         $Db_Command = "INSERT INTO student(FirstName,LastName,email,cid,PhoneNumber,Address,Password) VALUES('$fn','$ln','$email','$course','$phone','$address','$pass5')";
+    //         // Step 4: Execute the SQL Command
+    //         $result = $conn->exec($Db_Command);
+    //         if($result){
+    //             // header("Location:ShowUsers.php?status=Inserted");
+    //             header("Location:index.php?status=Inserted");
+
+    //         }
+    //         else{
+    //             // header("Location:ShowUsers.php?status=Error");
+    //             header("Location:RegisterStudent.php?status=Error");
+
+    //         }
+
+    //         } catch(PDOException $e) {
+    //         echo "Connection failed: " . $e->getMessage();
+    //         }
+    //     }   
+    //     else{
+    //         echo "Unable to register. Make sure your email is a Cavendish email";
+    //     }
+    // }
     if(isset($_POST["register"])) {
         $email = $_POST["email"];
-        if(preg_match("[@students.cavendish.ac.ug]",$email)){
-
+        if(preg_match("/@students.cavendish.ac.ug$/",$email)){
+    
             $fn = $_POST["fname"];
             $ln = $_POST["lname"];
             $course = $_POST["course"];
             $email = $_POST["email"];
             $pass = $_POST["pass"];
-            $Pass1 = md5($pass);
-            $Pass2 = sha1($Pass1);
-            $Pass3 = md5($Pass2);
-            $Pass4 = sha1($Pass3);
-            $Pass5 = crypt($Pass4,'@%!');
-           
+    
+            // Hashing the password securely
+            // $passHashed = crypt(sha1(md5($pass)), "@%1`");
+            // Generate a salt (cost parameter)
+            $options = ['cost' => 12]; // Adjust the cost parameter as needed
+            $salt = password_hash($pass, PASSWORD_DEFAULT, $options);
 
+            // Hash the password using bcrypt
+            $passHashed = password_hash($pass, PASSWORD_BCRYPT, $options);
+    
             $phone = $_POST["phone"];
             $address = $_POST["address"];
-
+    
             $servername = "localhost";
             $username = "root";
             $password = "";
             $db = "voting_db";
-
+    
             try {
                 $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
-                // set the PDO error mode to exception
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                // echo "Connected successfully";
-                // Step 3 : Writhe the SQL Command
-
-            $Db_Command = "INSERT INTO student(FirstName,LastName,email,cid,PhoneNumber,Address,Password) VALUES('$fn','$ln','$email','$course','$phone','$address','$Pass5')";
-            // Step 4: Execute the SQL Command
-            $result = $conn->exec($Db_Command);
-            if($result){
-                // header("Location:ShowUsers.php?status=Inserted");
-                header("Location:index.php?status=Inserted");
-
-            }
-            else{
-                // header("Location:ShowUsers.php?status=Error");
-                header("Location:ShowUsers.php?status=Error");
-
-            }
-
+    
+                $Db_Command = $conn->prepare("INSERT INTO student(FirstName,LastName,email,cid,PhoneNumber,Address,Password) VALUES(:fn, :ln, :email, :course, :phone, :address, :pass)");
+                $Db_Command->bindParam(':fn', $fn);
+                $Db_Command->bindParam(':ln', $ln);
+                $Db_Command->bindParam(':email', $email);
+                $Db_Command->bindParam(':course', $course);
+                $Db_Command->bindParam(':phone', $phone);
+                $Db_Command->bindParam(':address', $address);
+                $Db_Command->bindParam(':pass', $passHashed);
+                $result = $Db_Command->execute();
+    
+                if($result){
+                    header("Location: index.php?status=Inserted");
+                } else {
+                    header("Location: RegisterStudent.php?status=Error");
+                }
+    
             } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+                echo "Connection failed: " . $e->getMessage();
             }
         }   
         else{
             echo "Unable to register. Make sure your email is a Cavendish email";
         }
     }
-
+    
 ?>

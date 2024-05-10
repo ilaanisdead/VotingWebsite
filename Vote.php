@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vote</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="home.css">
     <script
         src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -89,6 +90,7 @@
                     let arr = [];
                     arrmap.forEach((k,v)=>{
                         arr.push(k);
+                        // console.log(k,v);
                     });
 
                     $.ajax({
@@ -97,13 +99,14 @@
                         data:{arrArray:arr},
                         success: function (result){
                             // $("#resp").html("Congratulations");
-                            // console.log(arr);
+                            console.log(arr);
                             alert("Thank you for voting. You'll not be able to access this page now");
-                            window.location.href = "index.php";
+                            window.location.href = "Vote.php";
 
                         },
                         error: function(exception){
                             // $("#resp").html("Failed");
+                            console.log(exception);
                             alert(exception);
                         }
                     });
@@ -113,7 +116,7 @@
         });
     </script>
 </head>
-<body >
+<body class="post_bg">
     <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
             <div class="container-fluid">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -138,6 +141,10 @@
         include("dBconfig.php");
         // session_start();
         
+        // checking if student has already voted and also if the student has logged in first
+        // this prevents access to this site through the url search bar
+        if($_SESSION["Status"]!="Voted"){
+
         // selecting all the candidates to show them on the voter's interface
         $Db_Command = $conn->prepare("SELECT * FROM prefect");
         $Db_Command->execute();
@@ -160,8 +167,7 @@
         // $res3 = $Db_Command->fetchAll(PDO::FETCH_ASSOC);
 
 
-        // checking if student has already voted
-        if($_SESSION['Status']!="Voted"){
+        
         foreach($res1 as $var1){
     ?>
 
@@ -210,7 +216,7 @@
         
         <td >
             <div value="<?php print($var1['id']); ?>">
-                <button type="submit" name="vote" value="<?php print($var2['post_id']) ?>" class="btn btn-primary btns">Vote</button>
+                <button type="submit" name="vote" value="<?php print($var2['id']) ?>" class="btn btn-primary btns">Vote</button>
             </div>
         </td> 
     </tr>
@@ -221,33 +227,14 @@
     </table>
         
     <?php
-    }
+    }?>
+    
+    <div class="text-center py-3"><button type="submit" id="sub" class="btn btn-success" style="margin:auto; width: 10rem;">Submit</button></div>
+    
+    <?php
     }
     else{
     ?>
-    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
-                    
-    <a href="index.php"><img src="img/img1.jpg" style="object-fit: cover; width: 50px; height: 50px;
-    border-radius: 100%;" class="ms-2" alt="cavendish logo"></a>
-
-    <nav class="navbar navbar-expand-lg me-auto ms-auto w-50">
-        <div class="container-fluid w-100">
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav justify-content-around" style="width: 100%;">
-            <li class="nav-item ">
-                <a class="nav-link" aria-current="page" href="index.php">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.php">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="signup.php">Sign Up</a>
-            </li>
-            </ul>
-        </div>
-        </div>
-    </nav>
-    </nav>
 
     <div class="content pt-5">
         <div class="container-fluid">
@@ -258,22 +245,13 @@
     background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.8));
     color: #00ff0d;
     "
-        > You have already voted. You cannot access the voting page and vote again
+        > You have already voted. You cannot access the voting page anymore
         
     </h4>    
 
         </div>
     </div>
     
-    <footer class="bg-black">
-        <h4 class="pt-3 mb-3 text-center text-white"
-        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"
-        >Contact us via email for any inquiries @ab88356@students.cavendish.ac.ug</h4>
-        <hr class="bg-light ms-auto me-auto" style="width: 70rem; height: 0.2rem;">
-        <nav class="pb-4" style="font-size: 30px; margin-left: 50%;">
-            <a href="https://mail.google.com"><i class="bi-envelope-at-fill"></i></a>
-        </nav>
-    </footer>
     <?php 
     
     }

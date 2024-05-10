@@ -38,8 +38,12 @@
     </nav>
 
 <h3 class="lead_title text-center ">Edit Prefect</h3>
-    <?php 
+    <?php
+        session_start();
+
         if(isset($_GET['Uid'])){
+            $_SESSION['SUid'] = $_GET['Uid'];
+
             $id = $_GET['Uid'];
             // Step 2: connect to the DB Server
             $servername = "localhost";
@@ -165,7 +169,10 @@
             header("Location:ShowPrefects.php?status=Edited&Msg=Success");
         }
         else{
-            header("Location:ShowPrefects.php?status=Error&Msg=Error");
+            echo "failed to Update. Please try again. Make sure you're using a Cavendish email";
+            ?>
+            <a href="EditPrefect.php?Uid=<?php echo $_SESSION['SUid'] ?>">Back</a>
+            <?php
         }
 
 
@@ -173,4 +180,5 @@
         echo "Connection failed:".$e->getMessage();
         }
     }
+    
 ?>

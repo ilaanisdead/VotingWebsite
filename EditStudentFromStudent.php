@@ -34,8 +34,8 @@ what the nw data is, he should be taken back to Student home page
     </nav>
 
     <h3 class="lead_title text-center">Edit Student</h3>
-    <?php 
 
+    <?php 
     if(isset($_GET['status'])){
         $St = $_GET['status'];
         

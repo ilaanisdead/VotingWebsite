@@ -9,7 +9,7 @@
 </head>
 <body class="showusers_bg">
     
-    <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -28,18 +28,36 @@
                     <a class="nav-link" href="Prefect.php">AddPrefect</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="AddAdmin.php">AddAdmin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowAdmins.php">ShowAdmins</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="AddPost.php">AddPost</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowPosts.php">ShowPosts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="AddCourse.php">AddCourse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="ShowCourses.php">ShowCourses</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" onclick="return confirm('Are you sure you want to Logout');" href="Logout.php">Logout</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <h3 class="lead_title text-center">Edit Student</h3>
+    <h3 class="lead_title text-center">Edit Admin</h3>
     <?php 
     session_start();
 
-
         if(isset($_GET['Uid'])){
+            
             $_SESSION['SUid'] = $_GET['Uid'];
 
             $id = $_GET['Uid'];
@@ -56,59 +74,32 @@
                 // echo "Connected successfully";
                 // Step 3 : Writhe the SQL Command
 
-            $Db_Command = $conn->prepare("SELECT * FROM student WHERE id='$id'");
-            $Db_Command_Course = $conn->prepare("SELECT * FROM course");
+            $Db_Command = $conn->prepare("SELECT * FROM admin WHERE id='$id'");
 
             $Db_Command->execute();
-            $Db_Command_Course->execute();
 
             $result = $Db_Command->setFetchMode(PDO::FETCH_ASSOC);
-            $result2 = $Db_Command_Course->fetchAll(PDO::FETCH_ASSOC);
 
             $row = $Db_Command->fetch();
             // echo $row['email'];
     ?>
     
-            <form class="container-fluid py-4 form_css" action="EditStudent.php" method="post">
+        <form class="form_css container-fluid py-4" action="EditAdmin.php" method="post">
             <input type="hidden" class="form-control" name= "id2" value="<?php echo $row['id']; ?>">
-        <p>
-            <label for="">FirstName :</label>
-            <input type="text" class="form-control" name="First" required value="<?php echo $row['FirstName']; ?>">
-        </p>
-        <p>
-            <label for="">LastName :</label>
-            <input type="text" class="form-control" name="Last" required value="<?php echo $row['LastName']; ?>">
-        </p>
-        <p>
-            <label for="">Email:</label>
-            <input type="email" class="form-control" name="email" required value="<?php echo $row['email']; ?>">
-        </p>
-        <p>
-            <label for="course">Course :</label>
-            <select name="course" class="form-select" id="course">
-                <?php
-                
-                    foreach($result2 as $x){
-                ?>
-                        <option value="<?php echo($x['id'])?>"><?php echo($x['Course_Name'])?></option>
-                <?php 
-                    }
-                
-                ?> 
-            </select>
-        </p>
-        <p>
-            <label for="phone">PhoneNumber :</label>
-            <input name="phone" class="form-select" value="<?php echo $row['PhoneNumber']; ?>" id="phone">
-        </p>
-        <p>
-            <label for="Address">Address :</label>
-            <input name="Address" class="form-select" value="<?php echo $row['Address']; ?>" id="Address">
-        </p>
-        <p>
-            <button type="submit" class="btn btn-primary" name="Update">Update User Account</button>
-        </p>
-    </form>
+            
+            <p>
+                <label class="form-label" for="name">UserName</label>
+                <input name="name" value="<?php echo $row["username"] ?>" class="form-control" id="name" type="text" required>
+            </p>
+
+            <p>
+                <label class="form-label" for="email">Email</label>
+                <input name="email" value="<?php echo $row["email"] ?>" class="form-control" id="email" type="email" required>
+            </p>
+            
+            
+            <button name="Update" class="btn btn-primary">submit</button>
+        </form>
 
 
             <?php
@@ -129,15 +120,9 @@
 <?php
 
     if(isset($_POST['Update'])){
-        $email = $_POST["email"];
-        if(preg_match("[@students.cavendish.ac.ug]",$email)){
+            $email = $_POST["email"];
             // echo "You have submitted";
-            $F=$_POST['First'];
-            $L=$_POST['Last'];
-            $E=$_POST['email'];
-            $C=$_POST['course'];
-            $P=$_POST['phone'];
-            $A=$_POST['Address'];
+            $F=$_POST['name'];
             $id2 = $_POST['id2'];
             // echo $F." ".$R;
 
@@ -154,16 +139,18 @@
                 // echo "Connected successfully";
                 // Step 3 : Writhe the SQL Command
 
-            $DBb_Command = "UPDATE student SET FirstName='$F',LastName='$L', email='$E', cid='$C',PhoneNumber='$P',Address='$A' WHERE id='$id2'";
+            $DBb_Command = "UPDATE admin SET email='$email',username='$F' WHERE id='$id2'";
 
             $result3 = $conn->exec($DBb_Command);
+
+            $_SESSION["UName"]=$F;
             if($result3){
-                header("Location:ShowUsers.php?status=Edited&Msg=Success");
+                header("Location:ShowAdmins.php?status=Edited&Msg=Success");
             }
             else{
                 echo "failed to Update :(. Please try again";
                 ?>
-                <a href="EditStudent.php?Uid=<?php echo $_SESSION['SUid'] ?>">Back</a>
+                <a href="EditAdmin.php?Uid=<?php echo $_SESSION['SUid'] ?>">Back</a>
                 <?php
             }
 
@@ -171,12 +158,6 @@
             } catch(PDOException $e) {
             echo "Connection failed:".$e->getMessage();
             }
-        }else{
-            echo "failed to Update. Please try again. Make sure you're using a Cavendish email";
-            ?>
-            <a href="EditStudent.php?Uid=<?php echo $_SESSION['SUid'] ?>">Back</a>
-            <?php
         }
-
-    }
+     
 ?>
